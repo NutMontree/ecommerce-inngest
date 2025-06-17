@@ -1,3 +1,4 @@
+https://tailwindcss.com/docs/installation/framework-guides/nextjs
 https://dashboard.clerk.com/apps/app_2xcpfEIsLp7A3gICxrOmp4palNx/instances/ins_2xcpf6yKfNZ6xbBiu0IOI2cmrXy/webhooks
 https://app.inngest.com/env/production/manage/signing-key
 https://console.cloudinary.com/app/c-ffe4e1c5f2d7e2623d6c4dbe10d75f/settings/api-keys
