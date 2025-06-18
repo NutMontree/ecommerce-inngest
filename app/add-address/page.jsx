@@ -7,9 +7,10 @@ import { useState } from "react";
 import { useAppContext } from "@/context/AppContext";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Router } from "next/router";
 
 const AddAddress = () => {
-  const { getToken, router } = useAppContext;
+  const { getToken, router } = useAppContext();
 
   const [address, setAddress] = useState({
     fullName: "",
@@ -37,7 +38,7 @@ const AddAddress = () => {
       } else {
         toast.error(data.message);
       }
-    } catch (eror) {
+    } catch (error) {
       toast.error(error.message);
     }
   };
