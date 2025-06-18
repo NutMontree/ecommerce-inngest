@@ -1,7 +1,6 @@
-// import { addressDummyData } from "@/assets/assets";
+import React, { useEffect, useState } from "react";
 import { useAppContext } from "@/context/AppContext";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const OrderSummary = () => {
@@ -56,6 +55,7 @@ const OrderSummary = () => {
         product: key,
         quantity: cartItems[key],
       }));
+
       cartItemsArray = cartItemsArray.filter((item) => item.quantity > 0);
 
       if (cartItemsArray.length === 0) {
