@@ -10,7 +10,7 @@ const Navbar = () => {
     <div className="flex items-center px-4 md:px-8 py-3 justify-between border-b">
       <Image
         onClick={() => router.push("/")}
-        className="w-10 lg:w-1 cursor-pointer"
+        className="w-10 lg:w-10 cursor-pointer"
         src={assets.logo}
         alt=""
       />

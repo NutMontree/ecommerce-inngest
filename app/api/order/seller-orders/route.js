@@ -16,11 +16,11 @@ export async function GET(request) {
             return NextResponse.json({ success: false, message: "not authorzed" })
         }
 
-        await connectDB
+        await connectDB()
 
         Address.length
 
-        const orders = await Order.find({}).populat('address items.product')
+        const orders = await Order.find({}).populate('address items.product')
 
         return NextResponse.json({ success: true, orders })
     } catch (error) {
