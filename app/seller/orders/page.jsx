@@ -22,7 +22,7 @@ const Orders = () => {
       const token = await getToken();
 
       const { data } = await axios.get("api/order/seller-order", {
-        headers: { Authorization: `Bearer, ${token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (data.success) {
@@ -31,7 +31,7 @@ const Orders = () => {
       } else {
         toast.error(data.message);
       }
-    } catch (erorr) {
+    } catch (error) {
       toast.error(error.message);
     }
   };
