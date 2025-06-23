@@ -7,13 +7,12 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const AddProduct = () => {
-  
   const { getToken } = useAppContext();
 
   const [files, setFiles] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("Earphone");
+  const [category, setCategory] = useState("ขนมไทย");
   const [price, setPrice] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
 
@@ -44,7 +43,7 @@ const AddProduct = () => {
         setFiles([]);
         setName("");
         setDescription("");
-        setCategory("Earphone");
+        setCategory("ขนมไทย");
         setPrice("");
         setOfferPrice("");
       } else {
@@ -63,7 +62,7 @@ const AddProduct = () => {
           className="md:p-10 p-4 space-y-5 max-w-lg"
         >
           <div>
-            <p className="text-base font-medium">Product Image</p>
+            <p className="text-base font-medium">ภาพสินค้า</p>
             <div className="flex flex-wrap items-center gap-3 mt-2">
               {[...Array(4)].map((_, index) => (
                 <label key={index} htmlFor={`image${index}`}>
@@ -95,12 +94,12 @@ const AddProduct = () => {
           </div>
           <div className="flex flex-col gap-1 max-w-md">
             <label className="text-base font-medium" htmlFor="product-name">
-              Product Name
+              ชื่อผลิตภัณฑ์
             </label>
             <input
               id="product-name"
               type="text"
-              placeholder="Type here"
+              placeholder="พิมพ์ที่นี่"
               className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
               onChange={(e) => setName(e.target.value)}
               value={name}
@@ -112,13 +111,13 @@ const AddProduct = () => {
               className="text-base font-medium"
               htmlFor="product-description"
             >
-              Product Description
+              รายละเอียดสินค้า
             </label>
             <textarea
               id="product-description"
               rows={4}
               className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40 resize-none"
-              placeholder="Type here"
+              placeholder="พิมพ์ที่นี่"
               onChange={(e) => setDescription(e.target.value)}
               value={description}
               required
@@ -127,7 +126,7 @@ const AddProduct = () => {
           <div className="flex items-center gap-5 flex-wrap">
             <div className="flex flex-col gap-1 w-32">
               <label className="text-base font-medium" htmlFor="category">
-                Category
+                ประเภท
               </label>
               <select
                 id="category"
@@ -135,18 +134,18 @@ const AddProduct = () => {
                 onChange={(e) => setCategory(e.target.value)}
                 defaultValue={category}
               >
-                <option value="Earphone">Earphone</option>
-                <option value="Headphone">Headphone</option>
-                <option value="Watch">Watch</option>
-                <option value="Smartphone">Smartphone</option>
-                <option value="Laptop">Laptop</option>
-                <option value="Camera">Camera</option>
-                <option value="Accessories">Accessories</option>
+                <option value="Thai_desserts">ขนมไทย</option>
+                <option value="Thai_dessert_set">ชุดขนมไทย</option>
+                <option value="Snack_break">ขนมจัดเบรค</option>
+                <option value="Auspicious_Thai_desserts">ขนมไทยมงคล</option>
+                <option value="Bakery">เบเกอรี่</option>
+                <option value="Herbal_water">น้ำสมุนไพร</option>
+                <option value="Sweet_water">น้ำหวาน</option>
               </select>
             </div>
             <div className="flex flex-col gap-1 w-32">
               <label className="text-base font-medium" htmlFor="product-price">
-                Product Price
+                ราคาสินค้า
               </label>
               <input
                 id="product-price"
@@ -160,7 +159,7 @@ const AddProduct = () => {
             </div>
             <div className="flex flex-col gap-1 w-32">
               <label className="text-base font-medium" htmlFor="offer-price">
-                Offer Price
+                ราคาเสนอ
               </label>
               <input
                 id="offer-price"
@@ -177,7 +176,7 @@ const AddProduct = () => {
             type="submit"
             className="px-8 py-2.5 bg-orange-600 hover:bg-green-600 text-white font-medium rounded"
           >
-            ADD
+            เพิ่มข้อมูล
           </button>
         </form>
         {/* <Footer /> */}

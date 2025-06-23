@@ -45,20 +45,20 @@ const ProductList = () => {
         <Loading />
       ) : (
         <div className="w-full md:p-10 p-4">
-          <h2 className="pb-4 text-lg font-medium">All Product</h2>
+          <h2 className="pb-4 text-lg font-medium">สินค้าทั้งหมด</h2>
           <div className="flex flex-col items-center max-w-4xl w-full overflow-hidden rounded-md bg-white border border-gray-500/20">
             <table className=" table-fixed w-full overflow-hidden">
               <thead className="text-gray-900 text-sm text-left">
                 <tr>
                   <th className="w-2/3 md:w-2/5 px-4 py-3 font-medium truncate">
-                    Product
+                    ผลิตภัณฑ์
                   </th>
                   <th className="px-4 py-3 font-medium truncate max-sm:hidden">
-                    Category
+                    ประเภท
                   </th>
-                  <th className="px-4 py-3 font-medium truncate">Price</th>
+                  <th className="px-4 py-3 font-medium truncate">ราคา</th>
                   <th className="px-4 py-3 font-medium truncate max-sm:hidden">
-                    Action
+                    ข้อมูลสินค้า
                   </th>
                 </tr>
               </thead>
@@ -69,7 +69,7 @@ const ProductList = () => {
                       <div className="bg-gray-500/10 rounded p-2">
                         <Image
                           src={product.image[0]}
-                          alt="product Image"
+                          alt="ภาพสินค้า"
                           className="w-16"
                           width={1280}
                           height={720}
@@ -80,7 +80,7 @@ const ProductList = () => {
                     <td className="px-4 py-3 max-sm:hidden">
                       {product.category}
                     </td>
-                    <td className="px-4 py-3">${product.offerPrice}</td>
+                    <td className="px-4 py-3">฿{product.offerPrice}</td>
                     <td className="px-4 py-3 max-sm:hidden">
                       <button
                         onClick={() => router.push(`/product/${product._id}`)}

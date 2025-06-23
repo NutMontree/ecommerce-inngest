@@ -6,27 +6,21 @@ const HeaderSlider = () => {
   const sliderData = [
     {
       id: 1,
-      title: "Experience Pure Sound - Your Perfect Headphones Awaits!",
-      offer: "Limited Time Offer 30% Off",
-      buttonText1: "Buy now",
-      buttonText2: "Find more",
-      imgSrc: assets.header_headphone_image,
+      title:
+        "เป็นขนมไทยโบราณที่นิยมใช้ในงานมงคล เช่น งานบวช งานแต่งงาน งานทำบุญบ้าน",
+      offer: "ขนมใส่ไส้",
+      buttonText1: "ซื้อเลย",
+      buttonText2: "ค้นหาเพิ่มเติม",
+      imgSrc: assets.a1,
     },
     {
       id: 2,
-      title: "Next-Level Gaming Starts Here - Discover PlayStation 5 Today!",
-      offer: "Hurry up only few lefts!",
+      title:
+        "เป็นขนมไทยโบราณที่มีความเรียบง่ายแต่แฝงไว้ด้วยรสชาติหวานหอมและความหมายมงคล",
+      offer: "ขนมต้ม",
       buttonText1: "Shop Now",
-      buttonText2: "Explore Deals",
-      imgSrc: assets.header_playstation_image,
-    },
-    {
-      id: 3,
-      title: "Power Meets Elegance - Apple MacBook Pro is Here for you!",
-      offer: "Exclusive Deal 40% Off",
-      buttonText1: "Order Now",
-      buttonText2: "Learn More",
-      imgSrc: assets.header_macbook_image,
+      buttonText2: "ค้นหาเพิ่มเติม",
+      imgSrc: assets.a2,
     },
   ];
 
@@ -67,7 +61,11 @@ const HeaderSlider = () => {
                 </button>
                 <button className="group flex items-center gap-2 px-6 py-2.5 font-medium">
                   {slide.buttonText2}
-                  <Image className="group-hover:translate-x-1 transition" src={assets.arrow_icon} alt="arrow_icon" />
+                  <Image
+                    className="group-hover:translate-x-1 transition"
+                    src={assets.arrow_icon}
+                    alt="arrow_icon"
+                  />
                 </button>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import logo from "./logo.svg";
+import logo from "./logo.webp";
 import search_icon from "./search_icon.svg";
 import user_icon from "./user_icon.svg";
 import cart_icon from "./cart_icon.svg";
@@ -38,6 +38,10 @@ import girl_with_headphone_image from "./girl_with_headphone_image.png";
 import girl_with_earphone_image from "./girl_with_earphone_image.png";
 import md_controller_image from "./md_controller_image.png";
 import sm_controller_image from "./sm_controller_image.png";
+import a1 from "./a1.webp";
+import a2 from "./a2.webp";
+import a3 from "./a3.webp";
+import b1 from "./b1.webp";
 import jbl_soundbox_image from "./jbl_soundbox_image.png";
 import boy_with_laptop_image from "./boy_with_laptop_image.png";
 import checkmark from "./checkmark.png";
@@ -88,6 +92,10 @@ export const assets = {
   girl_with_earphone_image,
   md_controller_image,
   sm_controller_image,
+  a1,
+  a2,
+  a3,
+  b1,
   jbl_soundbox_image,
   boy_with_laptop_image,
   product_details_page_apple_earphone_image1,
