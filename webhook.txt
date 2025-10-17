@@ -1,0 +1,50 @@
+function doPost(e) {
+  // รับข้อมูลจาก LINE Messaging API
+  var data = JSON.parse(e.postData.contents);
+
+
+  // ตรวจสอบว่าเหตุการณ์มาจากกลุ่ม
+  if (data.events && data.events[0].source.type === "group") {
+    var groupId = data.events[0].source.groupId;
+
+
+    // ส่ง Group ID กลับไปยังกลุ่ม
+    replyMessage(data.events[0].replyToken, `This is your Group ID: ${groupId}`);
+  }
+
+
+  return ContentService.createTextOutput(JSON.stringify({ status: 'success' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+
+function replyMessage(replyToken, message) {
+  var accessToken = 'accessToken'; // ใส่ Channel Access Token ของคุณ
+
+
+  var url = "https://api.line.me/v2/bot/message/reply";
+
+
+  var payload = {
+    replyToken: replyToken,
+    messages: [
+      {
+        type: "text",
+        text: message
+      }
+    ]
+  };
+
+
+  var options = {
+    method: "post",
+    contentType: "application/json",
+    headers: {
+      "Authorization": "Bearer " + accessToken
+    },
+    payload: JSON.stringify(payload)
+  };
+
+
+  UrlFetchApp.fetch(url, options);
+}
