@@ -14,12 +14,15 @@
     "axios": "^1.10.0",
     "cloudinary": "^2.6.1",
     "inngest": "^3.39.1",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.0",
     "next": "15.3.3",
+    "next-auth": "^4.24.11",
     "postcss": "^8.5.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hot-toast": "^2.5.2"
+    "react-hot-toast": "^2.5.2",
+    "sweetalert2": "^11.26.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
