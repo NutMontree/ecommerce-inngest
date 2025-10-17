@@ -7,10 +7,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const Spinner = () => (
-  <div
-    className="fixed inset-0 bg-black/30 flex items-center justify-center z-50"
-    style={{ animationDuration: "30s" }}
-  >
+  <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
     <div className="w-16 h-16 border-4 border-t-orange-600 border-gray-300 rounded-full animate-spin"></div>
   </div>
 );
@@ -46,7 +43,7 @@ const OrderSummary = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || "เกิดข้อผิดพลาด");
     }
   };
 
@@ -64,24 +61,51 @@ const OrderSummary = () => {
     setLoading(true);
 
     try {
+      // ตรวจสอบ address และ cart
       if (!selectedAddress) {
         toast.error("Please select an address");
-        setLoading(false);
         return;
       }
 
-      let cartItemsArray = Object.keys(cartItems)
+      const cartItemsArray = Object.keys(cartItems)
         .map((key) => ({ product: key, quantity: cartItems[key] }))
         .filter((item) => item.quantity > 0);
 
       if (cartItemsArray.length === 0) {
         toast.error("Cart is empty");
-        setLoading(false);
         return;
       }
 
-      const token = await getToken();
+      // เตรียม formData สำหรับ LINE
+      const formData = {
+        name: user?.name || "",
+        email: user?.email || "",
+        subject: "Order",
+        message: "New order received",
+        user: user?.name || "ไม่ระบุ",
+        address: selectedAddress,
+        items: cartItemsArray,
+        total: (getCartAmount() * 1.02).toFixed(2),
+      };
 
+      console.log("LINE formData:", formData);
+
+      // ส่ง LINE
+      const resLine = await fetch("/api/line", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const dataLine = await resLine.json();
+      if (dataLine.success) {
+        toast.success(dataLine.message || "ส่งข้อความเรียบร้อย!");
+      } else {
+        toast.error(dataLine.message || "ส่งข้อความไม่สำเร็จ");
+      }
+
+      // สร้าง order
+      const token = await getToken();
       const { data } = await axios.post(
         "/api/order/create",
         { address: selectedAddress._id, items: cartItemsArray },
@@ -91,23 +115,13 @@ const OrderSummary = () => {
       if (data.success) {
         toast.success(data.message);
         setCartItems({});
-        // delay 1.5 วินาที ก่อน redirect
-        setTimeout(() => {
-          router.push("/my-orders");
-        }, 7000);
+        setTimeout(() => router.push("/my-orders"), 1500);
       } else {
         toast.error(data.message);
-        if (
-          data.message === "User not authenticated" ||
-          data.message === "User not found"
-        ) {
-          setTimeout(() => {
-            router.push("/my-orders");
-          }, 7000);
-        }
       }
     } catch (error) {
-      toast.error(error.message);
+      console.error("OrderSummary error:", error);
+      toast.error(error.message || "เกิดข้อผิดพลาด");
     } finally {
       setLoading(false);
     }
