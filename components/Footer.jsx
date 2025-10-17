@@ -59,15 +59,19 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-center py-4 text-center text-xs md:text-sm gap-1">
-        <div>Copyright 2025 ©</div>
-        <Link
-          href="https://allmaster.vercel.app/"
-          className="hover:text-blue-500"
-        >
-          AllMaster
-        </Link>
-        <div>All Right Reserved.</div>
+      <div className="flex justify-center">
+        <div className="py-4 text-center text-xs md:text-sm flex-none md:flex">
+          <div className="flex gap-1">
+            <div>Copyright 2025 ©</div>
+            <Link
+              href="https://allmaster.vercel.app/"
+              className="hover:text-blue-500"
+            >
+              AllMaster
+            </Link>
+          </div>
+          <div>All Right Reserved.</div>
+        </div>
       </div>
     </footer>
   );

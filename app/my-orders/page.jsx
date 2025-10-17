@@ -165,9 +165,17 @@ const MyOrders = () => {
                       <p className="flex flex-col">
                         <span>Method: COD</span>
                         <span>
-                          Date: {new Date(order.date).toLocaleDateString()}
+                          Date:{" "}
+                          {new Date(order.date).toLocaleString("th-TH", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                          })}
                         </span>
-                        <span>Payment: Pending</span>
+                        <span>การชําระเงิน: รอดําเนินการ</span>
                       </p>
 
                       {/* ปุ่มยกเลิก */}
@@ -194,7 +202,7 @@ const MyOrders = () => {
                       {statusLower !== "pending" &&
                         !["cancelled", "canceled"].includes(statusLower) && (
                           <p className="mt-3 text-xs text-gray-500 italic">
-                            Status:{" "}
+                            สถานะ:{" "}
                             {order.status.charAt(0).toUpperCase() +
                               order.status.slice(1)}
                           </p>

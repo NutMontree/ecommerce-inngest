@@ -26,7 +26,7 @@ const Orders = () => {
       });
 
       if (data.success) {
-        setOrders(data.orders);
+        setOrders(data.orders.reverse());
       } else {
         toast.error(data.message);
       }
@@ -154,11 +154,26 @@ const Orders = () => {
                     <p className="flex flex-col">
                       <span>Method : COD</span>
                       <span>
-                        Date : {new Date(order.date).toLocaleDateString()}
+                        Date:{" "}
+                        {new Date(order.date).toLocaleString("th-TH", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
+                        })}
                       </span>
                       <span>การชำระเงิน : รอดำเนินการ</span>
                     </p>
                   </div>
+                  {/* ปุ่มลบรายการ (สามารถกดได้ทีละรายการ) */}
+                  <button
+                    onClick={() => handleDeleteOrder(order._id)}
+                    className="mt-12 py-2 px-4 text-xs text-white bg-red-700 rounded hover:bg-gray-800 transition duration-150"
+                  >
+                    ลบรายการ
+                  </button>
                 </div>
               ))
             )}

@@ -9,14 +9,16 @@ const Footer = () => {
       <div className="flex items-center gap-4">
         <Image className="hidden md:block w-8" src={assets.logo} alt="logo" />
         <div className="hidden md:block h-7 w-px bg-gray-500/60"></div>
-        <div className="flex justify-center py-4 text-center text-xs md:text-sm gap-1">
-          <div>Copyright 2025 ©</div>
-          <Link
-            href="https://allmaster.vercel.app/"
-            className="hover:text-blue-500"
-          >
-            AllMaster
-          </Link>
+        <div className="py-4 text-center text-xs md:text-sm flex-none md:flex">
+          <div className="flex gap-1">
+            <div>Copyright 2025 ©</div>
+            <Link
+              href="https://allmaster.vercel.app/"
+              className="hover:text-blue-500"
+            >
+              AllMaster
+            </Link>
+          </div>
           <div>All Right Reserved.</div>
         </div>
       </div>

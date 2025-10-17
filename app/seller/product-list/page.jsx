@@ -82,9 +82,9 @@ const ProductList = () => {
                         <Image
                           src={product.image[0]}
                           alt="ภาพสินค้า"
-                          className="w-16 h-16 object-cover"
-                          width={1280}
-                          height={720}
+                          className="object-cover w-full h-full rounded"
+                          width={80}
+                          height={80}
                         />
                       </div>
                       <span className="truncate w-full">{product.name}</span>

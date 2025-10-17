@@ -55,7 +55,7 @@ export async function POST(request) {
         user.cartItems = {};
         await user.save();
 
-        return NextResponse.json({ success: true, message: 'Order Placed' });
+        return NextResponse.json({ success: true, message: 'สั่งซื้อแล้ว' });
 
     } catch (error) {
         console.error(error);
