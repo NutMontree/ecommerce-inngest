@@ -1,3 +1,5 @@
+https://script.google.com/
+
 function doPost(e) {
   // รับข้อมูลจาก LINE Messaging API
   var data = JSON.parse(e.postData.contents);
