@@ -28,7 +28,7 @@ const OrderSummary = () => {
   const [userAddresses, setUserAddresses] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // ดึงที่อยู่ผู้ใช้
+  // ดึงที่อยู่ของผู้ใช้
   const fetchUserAddresses = async () => {
     try {
       const token = await getToken();
@@ -38,12 +38,16 @@ const OrderSummary = () => {
 
       if (data.success) {
         setUserAddresses(data.addresses);
-        if (data.addresses.length > 0) setSelectedAddress(data.addresses[0]);
+        if (data.addresses.length > 0) {
+          setSelectedAddress(data.addresses[0]);
+        } else {
+          toast("ยังไม่มีที่อยู่ กรุณาเพิ่มที่อยู่ก่อนทำการสั่งซื้อ");
+        }
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message || "เกิดข้อผิดพลาด");
+      toast.error(error.message || "เกิดข้อผิดพลาดในการโหลดที่อยู่");
     }
   };
 
@@ -61,50 +65,45 @@ const OrderSummary = () => {
     setLoading(true);
 
     try {
-      // ตรวจสอบ address และ cart
       if (!selectedAddress) {
-        toast.error("Please select an address");
+        toast.error("กรุณาเลือกที่อยู่ก่อนทำการสั่งซื้อ");
+        setLoading(false);
         return;
       }
 
-      const cartItemsArray = Object.keys(cartItems)
-        .map((key) => ({ product: key, quantity: cartItems[key] }))
+      const cartItemsArray = Object.entries(cartItems)
+        .map(([product, quantity]) => ({ product, quantity }))
         .filter((item) => item.quantity > 0);
 
       if (cartItemsArray.length === 0) {
-        toast.error("Cart is empty");
+        toast.error("ตะกร้าสินค้าว่างเปล่า");
+        setLoading(false);
         return;
       }
 
-      // เตรียม formData สำหรับ LINE
+      const total = (getCartAmount() * 1.02).toFixed(2);
+
+      // เตรียมข้อมูลสำหรับ LINE
       const formData = {
-        name: user?.name || "",
-        email: user?.email || "",
+        name: user?.name || user?.email || "ไม่ระบุชื่อ",
+        email: user?.email || "-",
         subject: "Order",
         message: "New order received",
         user: user?.name || "ไม่ระบุ",
         address: selectedAddress,
         items: cartItemsArray,
-        total: (getCartAmount() * 1.02).toFixed(2),
+        total,
       };
 
-      console.log("LINE formData:", formData);
-
-      // ส่ง LINE
-      const resLine = await fetch("/api/line", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const dataLine = await resLine.json();
-      if (dataLine.success) {
-        toast.success(dataLine.message || "ส่งข้อความเรียบร้อย!");
+      // ส่งข้อมูลไปยัง LINE API
+      const lineRes = await axios.post("/api/line", formData);
+      if (lineRes.data.success) {
+        toast.success("แจ้งเตือนไปยัง LINE แล้ว!");
       } else {
-        toast.error(dataLine.message || "ส่งข้อความไม่สำเร็จ");
+        toast.error(lineRes.data.message || "ไม่สามารถแจ้งไป LINE ได้");
       }
 
-      // สร้าง order
+      // สร้างคำสั่งซื้อในระบบ
       const token = await getToken();
       const { data } = await axios.post(
         "/api/order/create",
@@ -113,15 +112,16 @@ const OrderSummary = () => {
       );
 
       if (data.success) {
-        toast.success(data.message);
+        toast.success("สร้างคำสั่งซื้อเรียบร้อย!");
         setCartItems({});
+        localStorage.removeItem("cartItems");
         setTimeout(() => router.push("/my-orders"), 1500);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
       console.error("OrderSummary error:", error);
-      toast.error(error.message || "เกิดข้อผิดพลาด");
+      toast.error(error.message || "เกิดข้อผิดพลาดในการสร้างคำสั่งซื้อ");
     } finally {
       setLoading(false);
     }
@@ -142,12 +142,12 @@ const OrderSummary = () => {
         </label>
         <div className="relative w-full text-sm border rounded">
           <button
-            className="peer w-full text-left px-4 py-2 bg-white text-gray-700 flex justify-between items-center"
+            className="peer w-full text-left px-4 py-2 bg-white text-gray-700 flex justify-between items-center cursor-pointer"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <span>
               {selectedAddress
-                ? `${selectedAddress.fullName}, ${selectedAddress.area}, ${selectedAddress.city}, ${selectedAddress.state}`
+                ? `${selectedAddress.fullName}, ${selectedAddress.area}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.pincode}`
                 : "Select Address"}
             </span>
             <svg
@@ -177,7 +177,7 @@ const OrderSummary = () => {
                   onClick={() => handleAddressSelect(address)}
                 >
                   {address.fullName}, {address.area}, {address.city},{" "}
-                  {address.state}
+                  {address.state}, {address.pincode}, {address.phoneNumber}
                 </li>
               ))}
               <li

@@ -1,13 +1,3 @@
-// const LINE_TOKEN = "u6Es8v8XLytQurPCWjuanLSItUf6deRXP3jGKEhYwgTNV0dxOUJRoKnY2UTtAJY6LxUSK9lUtCaQGYCQHVbTh6DhNbg0OvYFxZvIBVKBwfdwuVMq/Cy7djgFN2ju7MVnJOHFQDvwWvacjBrbsRdOzAdB04t89/1O/w1cDnyilFU="; // ใส่ token ของกลุ่มคุณ
-
-// const res = await fetch("https://api.line.me/v2/bot/message/push", {
-//     method: "POST",
-//     headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${LINE_TOKEN}`,
-//     },
-//     body: new URLSearchParams({ message }),
-// });
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -15,13 +5,13 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { name, email, subject, message, user, address, items, total } = body;
 
-        // ตรวจสอบข้อมูลสำคัญ
         if (!name || !email || !message) {
-            return NextResponse.json({ success: false, message: "กรุณากรอกข้อมูลให้ครบถ้วน" }, { status: 400 });
+            return NextResponse.json(
+                { success: false, message: "กรุณากรอกข้อมูลให้ครบถ้วน" },
+                { status: 400 }
+            );
         }
 
-
-        // ตรวจสอบค่า LINE Token และ TO
         const LINE_CHANNEL_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
         const TO = process.env.LINE_TO;
 
@@ -32,25 +22,121 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Fallback ค่า user และ address
-        const userName = user || "ไม่ระบุ";
         const orderAddress = address || {};
-        const fullAddress = `${orderAddress.fullName || "-"}, ${orderAddress.area || "-"}, ${orderAddress.city || "-"}, ${orderAddress.state || "-"}`;
+        const userName = `${orderAddress.fullName || "-"}, `;
+        const fullAddress = `${orderAddress.area || "-"}, ${orderAddress.city || "-"}, ${orderAddress.state || "-"}, ${orderAddress.pincode || "-"}`;
+        const phoneNumberID = `${orderAddress.phoneNumber || "-"}, `;
 
-        // สร้างข้อความ LINE
-        const textMessage = `
-📦 มีออเดอร์ใหม่เข้ามา!
-👤 ผู้สั่ง: ${userName}
-🏠 ที่อยู่: ${fullAddress}
-💰 ยอดรวม: ฿${total || 0}
-🍮 รายการสินค้า:
-${(items || []).map((i: { product: any; quantity: any; price?: any }) => `• ${i.product} x${i.quantity}${i.price ? ` (฿${i.price})` : ""}`).join("\n")}
-    `;
+        const orderDate = new Date();
+        const formattedDate = orderDate.toLocaleString("th-TH", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
 
-        console.log("LINE message:", textMessage);
-        console.log("Sending to:", TO);
+        // ✅ สร้าง Flex Message
+        const flexMessage = {
+            type: "flex",
+            altText: "📦 มีออเดอร์ใหม่เข้ามา!",
+            contents: {
+                type: "bubble",
+                size: "giga",
+                body: {
+                    type: "box",
+                    layout: "vertical",
+                    contents: [
+                        {
+                            type: "text",
+                            text: "📦 รายละเอียดออเดอร์ใหม่",
+                            weight: "bold",
+                            size: "lg",
+                            color: "#1DB446",
+                            margin: "none",
+                        },
+                        {
+                            type: "box",
+                            layout: "vertical",
+                            margin: "md",
+                            spacing: "sm",
+                            contents: [
+                                {
+                                    type: "text",
+                                    text: `👤 ผู้สั่ง: ${userName}`,
+                                    wrap: true,
+                                },
+                                {
+                                    type: "text",
+                                    text: `📞 เบอร์โทร: ${phoneNumberID}`,
+                                    wrap: true,
+                                },
+                                {
+                                    type: "text",
+                                    text: `🏠 ที่อยู่: ${fullAddress}`,
+                                    wrap: true,
+                                },
+                            ],
+                        },
+                        {
+                            type: "text",
+                            text: `🕒 วันที่สั่งซื้อ: ${formattedDate}`,
+                            wrap: true,
+                            margin: "sm",
+                            size: "sm",
+                            color: "#555555",
+                        },
+                        {
+                            type: "separator",
+                            margin: "md",
+                        },
+                        {
+                            type: "separator",
+                            margin: "md",
+                        },
+                        {
+                            type: "box",
+                            layout: "horizontal",
+                            margin: "md",
+                            contents: [
+                                {
+                                    type: "text",
+                                    text: "ยอดรวมทั้งหมด",
+                                    weight: "bold",
+                                    size: "sm",
+                                },
+                                {
+                                    type: "text",
+                                    text: `฿${total || 0}`,
+                                    size: "sm",
+                                    weight: "bold",
+                                    align: "end",
+                                    color: "#E53935",
+                                },
+                            ],
+                        },
+                    ],
+                },
+                footer: {
+                    type: "box",
+                    layout: "vertical",
+                    contents: [
+                        {
+                            type: "button",
+                            style: "primary",
+                            color: "#1DB446",
+                            action: {
+                                type: "uri",
+                                label: "ดูรายละเอียดออเดอร์",
+                                uri: "https://sonklin.vercel.app/seller/orders",
+                            },
+                        },
+                    ],
+                },
+            },
+        };
 
-        // ส่งข้อความไป LINE
+        // ✅ ส่ง Flex Message ไป LINE
         const res = await fetch("https://api.line.me/v2/bot/message/push", {
             method: "POST",
             headers: {
@@ -59,20 +145,46 @@ ${(items || []).map((i: { product: any; quantity: any; price?: any }) => `• ${
             },
             body: JSON.stringify({
                 to: TO,
-                messages: [{ type: "text", text: textMessage }],
+                messages: [flexMessage],
             }),
         });
 
         if (!res.ok) {
             const errText = await res.text();
             console.error("LINE API response:", res.status, errText);
-            return NextResponse.json(
-                { success: false, message: errText || "ส่งข้อความไม่สำเร็จ" },
-                { status: 500 }
-            );
+
+            // ถ้า Flex ล้มเหลว → fallback ส่งข้อความธรรมดา
+            const textMessage = `
+📦 มีออเดอร์ใหม่เข้ามา!
+👤 ผู้สั่ง: ${userName}
+📞 เบอร์โทร: ${phoneNumberID}
+🏠 ที่อยู่: ${fullAddress}
+🕒 วันที่สั่งซื้อ: ${formattedDate}
+💰 ยอดรวม: ฿${total || 0}
+🍮 รายการสินค้า:
+กดดูรายละเอียดเพิ่มเติมได้ที่ร้านของคุณ: ${'https://sonklin.vercel.app/seller/orders'}
+${(items || [])
+                    .map(
+                        (i: any) =>
+                            `• ${i.product} x${i.quantity}${i.price ? ` (฿${i.price})` : ""}`
+                    )
+                    .join("\n")}
+`;
+
+            await fetch("https://api.line.me/v2/bot/message/push", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${LINE_CHANNEL_ACCESS_TOKEN}`,
+                },
+                body: JSON.stringify({
+                    to: TO,
+                    messages: [{ type: "text", text: textMessage }],
+                }),
+            });
         }
 
-        return NextResponse.json({ success: true, message: "ส่งข้อความเรียบร้อย!" });
+        return NextResponse.json({ success: true, message: "ส่งข้อความสำเร็จ!" });
     } catch (error: any) {
         console.error("LINE API error:", error);
         return NextResponse.json(
